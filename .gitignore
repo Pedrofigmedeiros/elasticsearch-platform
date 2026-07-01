@@ -1,0 +1,27 @@
+# ==========================================
+# Elasticsearch & Docker Data (Do NOT commit)
+# ==========================================
+# This ignores the local volume folders where Elasticsearch
+# stores its indices, shards, and cluster data.
+es-data01/
+es-data02/
+es-data03/
+data/
+.docker/
+
+# ==========================================
+# Logs and Environments
+# ==========================================
+# Ignores local log files and secret environment variables
+*.log
+logs/
+.env
+
+# ==========================================
+# IDEs and System Files
+# ==========================================
+# Ignores editor configurations and OS junk files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

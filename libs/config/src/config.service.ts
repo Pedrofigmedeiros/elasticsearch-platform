@@ -13,7 +13,7 @@ export class ConfigService {
   get apiPort(): number {
     return env
       .get('API_PORT')
-      .default('8080')
+      .default('3000')
       .asPortNumber();
   }
 }

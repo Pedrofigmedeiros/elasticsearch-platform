@@ -1,12 +1,15 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ElasticsearchService } from 'libs/elasticsearch';
 
 @Controller()
 export class AppController {
-  constructor(private readonly apiService: AppService) {}
+  constructor(
+    private readonly elasticsearchService: ElasticsearchService
+  ) {}
 
-  @Get()
-  getHello(): string {
-    return this.apiService.getHello();
+  @Get('health/elasticsearch')
+  elasticsearchHealth() {
+    return this.elasticsearchService.health();
   }
 }

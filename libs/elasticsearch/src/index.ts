@@ -1,2 +1,2 @@
-export * from './elasticsearch.module';
-export * from './elasticsearch.service';
+export * from './lib/elasticsearch.module';
+export * from './lib/elasticsearch.service';

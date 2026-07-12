@@ -10,12 +10,22 @@ export class ProductSearchService {
     private readonly elasticsearchService: ElasticsearchService,
   ) {}
 
-  async findAll() {
+  async searchByText(query: string) {
     const response = await this.elasticsearchService.search({
       index: this.indexName,
       size: 10,
       query: {
-        match_all: {},
+        multi_match: {
+          query: query,
+          fields: [
+            'title',
+            'brand',
+            'category',
+            'subcategory',
+            'color',
+            'search_text',
+          ],
+        },
       },
     });
 

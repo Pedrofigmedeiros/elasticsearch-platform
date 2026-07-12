@@ -60,33 +60,34 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductSearchConroller = void 0;
 const common_1 = __webpack_require__(4);
 const product_search_1 = __webpack_require__(6);
-const elasticsearch_1 = __webpack_require__(9);
 let ProductSearchConroller = class ProductSearchConroller {
-    elasticsearchService;
     productSearchService;
-    constructor(elasticsearchService, productSearchService) {
-        this.elasticsearchService = elasticsearchService;
+    constructor(productSearchService) {
         this.productSearchService = productSearchService;
     }
-    findAll() {
-        return this.productSearchService.findAll();
+    search(query) {
+        return this.productSearchService.searchByText(query);
     }
 };
 exports.ProductSearchConroller = ProductSearchConroller;
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Get)('search'),
+    __param(0, (0, common_1.Query)('q')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], ProductSearchConroller.prototype, "findAll", null);
+], ProductSearchConroller.prototype, "search", null);
 exports.ProductSearchConroller = ProductSearchConroller = __decorate([
-    (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof elasticsearch_1.ElasticsearchService !== "undefined" && elasticsearch_1.ElasticsearchService) === "function" ? _a : Object, typeof (_b = typeof product_search_1.ProductSearchService !== "undefined" && product_search_1.ProductSearchService) === "function" ? _b : Object])
+    (0, common_1.Controller)('products'),
+    __metadata("design:paramtypes", [typeof (_a = typeof product_search_1.ProductSearchService !== "undefined" && product_search_1.ProductSearchService) === "function" ? _a : Object])
 ], ProductSearchConroller);
 
 
@@ -168,12 +169,22 @@ let ProductSearchService = class ProductSearchService {
     constructor(elasticsearchService) {
         this.elasticsearchService = elasticsearchService;
     }
-    async findAll() {
+    async searchByText(query) {
         const response = await this.elasticsearchService.search({
             index: this.indexName,
             size: 10,
             query: {
-                match_all: {},
+                multi_match: {
+                    query: query,
+                    fields: [
+                        'title',
+                        'brand',
+                        'category',
+                        'subcategory',
+                        'color',
+                        'search_text',
+                    ],
+                },
             },
         });
         return response.hits.hits.map((hit) => ({

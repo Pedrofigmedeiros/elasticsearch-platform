@@ -19,7 +19,7 @@ export class ConfigService {
 
   get elasticsearchPassword(): string {
     return env
-      .get('ELASTICSEARCH_PASSWORD')
+      .get('ELASTIC_PASSWORD')
       .required()
       .asString();
   }

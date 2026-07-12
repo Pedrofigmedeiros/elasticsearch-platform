@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from 'libs/elasticsearch';
-import { Product } from './types/product.types';
+import { Product } from './types/product.type';
 
 @Injectable()
 export class ProductSearchService {

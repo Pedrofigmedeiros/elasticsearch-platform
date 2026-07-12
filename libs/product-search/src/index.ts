@@ -1,2 +1,2 @@
 export * from './product-search.module';
-export * from './product-search.service';
+export * from './lib/product-search.service';

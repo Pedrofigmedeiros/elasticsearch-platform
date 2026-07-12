@@ -14,6 +14,7 @@
 ## Medium Priority
 
 - [ ] Abstract Elasticsearch Client
+- [ ] Configure TLS using the Elasticsearch CA certificate
 - [ ] Add Health Checks
 - [ ] Add Retry Strategy
 - [ ] Add Metrics

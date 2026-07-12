@@ -1,4 +1,4 @@
-import { Client } from '@elastic/elasticsearch';
+import { Client, estypes} from '@elastic/elasticsearch';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from 'libs/config';
 
@@ -6,7 +6,9 @@ import { ConfigService } from 'libs/config';
 export class ElasticsearchService {
   private readonly client: Client;
 
-  constructor(private readonly config: ConfigService) {
+  constructor(
+    private readonly config: ConfigService
+  ){
     this.client = new Client({
       node: this.config.elasticsearchNode,
       auth: {
@@ -15,6 +17,8 @@ export class ElasticsearchService {
       },
 
       tls: {
+        // TODO: Configure the Elasticsearch CA certificate.
+        // Intended only for local development.
         rejectUnauthorized: false,
       },
     });
@@ -22,5 +26,9 @@ export class ElasticsearchService {
 
   async health() {
     return this.client.cluster.health();
+  }
+
+  async search(request: estypes.SearchRequest) {
+    return this.client.search(request);
   }
 }

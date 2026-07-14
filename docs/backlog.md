@@ -4,7 +4,7 @@
 
 - [x] Create Config Library
 - [x] Integrate Elasticsearch Client
-- [ ] Create Search Module
+- [X] Create Search Module
 - [ ] Create Index Management Service
 - [ ] Create Document Management Service
 - [ ] Connect to Database

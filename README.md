@@ -1,75 +1,169 @@
+# Elasticsearch Platform
+
 ## Description
-Elasticsearch Platform is a modular search platform built on Elasticsearch for designing, developing, and experimenting with scalable, high-performance search solutions. It provides reusable components for indexing, querying, relevance tuning, and search APIs, making it easy to build search experiences across multiple business domains such as e-commerce, real estate, marketplaces, and more.
 
-This project is built with the NestJS framework and serves as a foundation for developing production-ready search applications and Elasticsearch-based services.
-## Project setup
+Elasticsearch Platform is a modular search platform built on **Elasticsearch** for designing, developing, and experimenting with scalable, high-performance search solutions.
 
-```bash
-$ npm install
-```
+It provides reusable components for indexing, querying, relevance tuning, document management, and search APIs, making it easy to build search experiences across multiple business domains such as **e-commerce**, **marketplaces**, **real estate**, **CRM**, **HR systems**, and more.
 
-## Compile and run the project
+Built with **NestJS** and **TypeScript**, the project follows a modular architecture inspired by production environments, serving both as a learning platform for Elasticsearch and as a foundation for developing reusable search services.
 
-```bash
-# development
-$ npm run start
+---
 
-# watch mode
-$ npm run start:dev
+## Features
 
-# production mode
-$ npm run start:prod
-```
+- Elasticsearch integration
+- Generic Search API
+- Index Management
+- Document Management
+- Data Indexing Pipeline
+- Query DSL
+- Dockerized Development Environment
+- Modular NestJS Architecture
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ npm run test
+## Tech Stack
 
-# e2e tests
-$ npm run test:e2e
+- NestJS
+- TypeScript
+- Elasticsearch
+- Kibana
+- Docker
+- Docker Compose
 
-# test coverage
-$ npm run test:cov
-```
+---
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Project Setup
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## Running the Project
 
-Check out a few resources that may come in handy when working with NestJS:
+### Start the Elastic Stack
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+docker compose up -d
+```
 
-## Support
+### Development
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm run start api
+```
 
-## Stay in touch
+### Watch Mode
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm run start:dev api
+```
+
+### Production
+
+```bash
+npm run start:prod api
+```
+
+---
+
+## Running the Indexer
+
+```bash
+npm run start indexer
+```
+
+---
+
+## Running Tests
+
+```bash
+# Unit Tests
+npm run test
+
+# End-to-End Tests
+npm run test:e2e
+
+# Test Coverage
+npm run test:cov
+```
+
+---
+
+## Project Structure
+
+```text
+apps/
+├── api/
+└── indexer/
+
+libs/
+├── config/
+├── elasticsearch/
+├── product-search/
+├── observability/
+└── shared/
+
+elasticsearch/
+├── analyzers/
+├── mappings/
+├── index-templates/
+└── queries/
+
+data/
+docker/
+docs/
+```
+
+---
+
+## Roadmap
+
+### Search
+
+- [x] Elasticsearch Client Integration
+- [x] Generic Search Operation
+- [x] First Search Endpoint
+- [ ] Generic Search Module
+- [ ] Pagination
+- [ ] Filtering
+- [ ] Sorting
+- [ ] Aggregations
+- [ ] Highlighting
+- [ ] Autocomplete
+
+### Indexing
+
+- [ ] Database Integration
+- [ ] Bulk Indexing
+- [ ] Incremental Synchronization
+- [ ] Document Transformation
+
+### Platform
+
+- [ ] Index Management
+- [ ] Document Management
+- [ ] Health Checks
+- [ ] Metrics
+- [ ] OpenTelemetry
+- [ ] Multi-Cluster Support
+
+---
+
+## Project Goals
+
+- Build a reusable search platform.
+- Explore Elasticsearch in depth.
+- Learn distributed search architectures.
+- Develop production-ready search solutions.
+- Create a reusable foundation that can be adapted to different business domains.
+- Serve as a technical portfolio demonstrating backend engineering and Elasticsearch expertise.
+
+---
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License.

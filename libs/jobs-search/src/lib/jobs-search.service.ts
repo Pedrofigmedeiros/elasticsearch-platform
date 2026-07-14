@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from 'libs/elasticsearch';
-import { Product } from './types/product.type';
+import { JobPosting } from './types/product.type';
 
 @Injectable()
 export class ProductSearchService {
-  private readonly indexName = 'ol_br_fashion_offers_v1';
+  private readonly indexName = 'job_postings';
 
   constructor(
     private readonly elasticsearchService: ElasticsearchService,
@@ -18,12 +18,10 @@ export class ProductSearchService {
         multi_match: {
           query: query,
           fields: [
-            'title',
-            'brand',
-            'category',
-            'subcategory',
-            'color',
-            'search_text',
+            'job_title^3',
+            'search_position^2',
+            'company',
+            'job_location',
           ],
         },
       },
@@ -32,7 +30,7 @@ export class ProductSearchService {
     return response.hits.hits.map((hit) => ({
       id: hit._id,
       score: hit._score,
-      Product: hit._source as Product,
+      Product: hit._source as JobPosting,
     }));
   }
 }

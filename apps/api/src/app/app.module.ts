@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ProductSearchHttpModule } from './product-search/product-search.module';
+import { ProductSearchHttpModule } from './jobs-search/jobs-search.module';
 
 @Module({
   imports: [ProductSearchHttpModule],

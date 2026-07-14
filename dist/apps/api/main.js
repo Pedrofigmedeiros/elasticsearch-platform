@@ -86,7 +86,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ProductSearchConroller.prototype, "search", null);
 exports.ProductSearchConroller = ProductSearchConroller = __decorate([
-    (0, common_1.Controller)('products'),
+    (0, common_1.Controller)('jobs'),
     __metadata("design:paramtypes", [typeof (_a = typeof product_search_1.ProductSearchService !== "undefined" && product_search_1.ProductSearchService) === "function" ? _a : Object])
 ], ProductSearchConroller);
 
@@ -165,7 +165,7 @@ const common_1 = __webpack_require__(4);
 const elasticsearch_1 = __webpack_require__(9);
 let ProductSearchService = class ProductSearchService {
     elasticsearchService;
-    indexName = 'ol_br_fashion_offers_v1';
+    indexName = 'job_postings';
     constructor(elasticsearchService) {
         this.elasticsearchService = elasticsearchService;
     }
@@ -177,12 +177,10 @@ let ProductSearchService = class ProductSearchService {
                 multi_match: {
                     query: query,
                     fields: [
-                        'title',
-                        'brand',
-                        'category',
-                        'subcategory',
-                        'color',
-                        'search_text',
+                        'job_title^3',
+                        'search_position^2',
+                        'company',
+                        'job_location',
                     ],
                 },
             },

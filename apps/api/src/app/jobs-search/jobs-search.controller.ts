@@ -1,8 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ProductSearchService } from 'libs/product-search';
+import { ProductSearchService } from 'libs/jobs-search/src';
 import { ElasticsearchService } from 'libs/elasticsearch';
 
-@Controller('products')
+@Controller('jobs')
 export class ProductSearchConroller {
   constructor(
     private readonly productSearchService: ProductSearchService,

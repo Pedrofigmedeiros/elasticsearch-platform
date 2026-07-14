@@ -35,10 +35,10 @@
         "libs/elasticsearch/src/*"
       ],
       "libs/product-search": [
-        "libs/product-search/src"
+        "libs/jobs-search/src"
       ],
       "libs/product-search/*": [
-        "libs/product-search/src/*"
+        "libs/jobs-search/src/*"
       ],
       "libs/shared": [
         "libs/shared/src"

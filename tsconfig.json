@@ -22,6 +22,12 @@
     "strictBindCallApply": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
+      "@app/search-index": [
+        "libs/search-index/src"
+      ],
+      "@app/search-index/*": [
+        "libs/search-index/src/*"
+      ],
       "libs/config": [
         "libs/config/src"
       ],

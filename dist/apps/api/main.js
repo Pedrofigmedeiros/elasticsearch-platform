@@ -27,15 +27,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductSearchHttpModule = void 0;
 const common_1 = __webpack_require__(4);
-const product_search_controller_1 = __webpack_require__(5);
-const product_search_1 = __webpack_require__(6);
+const jobs_search_controller_1 = __webpack_require__(5);
+const src_1 = __webpack_require__(6);
 let ProductSearchHttpModule = class ProductSearchHttpModule {
 };
 exports.ProductSearchHttpModule = ProductSearchHttpModule;
 exports.ProductSearchHttpModule = ProductSearchHttpModule = __decorate([
     (0, common_1.Module)({
-        imports: [product_search_1.ProductSearchModule],
-        controllers: [product_search_controller_1.ProductSearchConroller],
+        imports: [src_1.ProductSearchModule],
+        controllers: [jobs_search_controller_1.ProductSearchConroller],
     })
 ], ProductSearchHttpModule);
 
@@ -67,7 +67,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductSearchConroller = void 0;
 const common_1 = __webpack_require__(4);
-const product_search_1 = __webpack_require__(6);
+const src_1 = __webpack_require__(6);
 let ProductSearchConroller = class ProductSearchConroller {
     productSearchService;
     constructor(productSearchService) {
@@ -87,7 +87,7 @@ __decorate([
 ], ProductSearchConroller.prototype, "search", null);
 exports.ProductSearchConroller = ProductSearchConroller = __decorate([
     (0, common_1.Controller)('jobs'),
-    __metadata("design:paramtypes", [typeof (_a = typeof product_search_1.ProductSearchService !== "undefined" && product_search_1.ProductSearchService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof src_1.ProductSearchService !== "undefined" && src_1.ProductSearchService) === "function" ? _a : Object])
 ], ProductSearchConroller);
 
 
@@ -130,7 +130,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProductSearchModule = void 0;
 const common_1 = __webpack_require__(4);
-const product_search_service_1 = __webpack_require__(8);
+const jobs_search_service_1 = __webpack_require__(8);
 const elasticsearch_1 = __webpack_require__(9);
 let ProductSearchModule = class ProductSearchModule {
 };
@@ -138,8 +138,8 @@ exports.ProductSearchModule = ProductSearchModule;
 exports.ProductSearchModule = ProductSearchModule = __decorate([
     (0, common_1.Module)({
         imports: [elasticsearch_1.ElasticsearchModule],
-        providers: [product_search_service_1.ProductSearchService],
-        exports: [product_search_service_1.ProductSearchService],
+        providers: [jobs_search_service_1.ProductSearchService],
+        exports: [jobs_search_service_1.ProductSearchService],
     })
 ], ProductSearchModule);
 
@@ -458,10 +458,10 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __webpack_require__(1);
 const core_1 = __webpack_require__(2);
-const product_search_module_1 = __webpack_require__(3);
+const jobs_search_module_1 = __webpack_require__(3);
 const config_1 = __webpack_require__(13);
 async function bootstrap() {
-    const app = await core_1.NestFactory.create(product_search_module_1.ProductSearchHttpModule);
+    const app = await core_1.NestFactory.create(jobs_search_module_1.ProductSearchHttpModule);
     const config = app.get(config_1.ConfigService);
     await app.listen(config.apiPort);
 }

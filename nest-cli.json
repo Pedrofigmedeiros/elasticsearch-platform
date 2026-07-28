@@ -55,6 +55,15 @@
         "tsConfigPath": "apps/indexer/tsconfig.app.json"
       }
     },
+    "operations": {
+      "type": "application",
+      "root": "apps/operations",
+      "entryFile": "main",
+      "sourceRoot": "apps/operations/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/operations/tsconfig.app.json"
+      }
+    },
     "product-search": {
       "type": "library",
       "root": "libs/product-search",
@@ -62,6 +71,15 @@
       "sourceRoot": "libs/product-search/src",
       "compilerOptions": {
         "tsConfigPath": "libs/product-search/tsconfig.lib.json"
+      }
+    },
+    "search-index": {
+      "type": "library",
+      "root": "libs/search-index",
+      "entryFile": "index",
+      "sourceRoot": "libs/search-index/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/search-index/tsconfig.lib.json"
       }
     },
     "shared": {

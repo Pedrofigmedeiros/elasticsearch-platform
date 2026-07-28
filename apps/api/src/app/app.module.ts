@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ProductSearchHttpModule } from './jobs-search/jobs-search.module';
+import { JobsSearchHttpModule } from './jobs-search/jobs-search.module';
 
 @Module({
-  imports: [ProductSearchHttpModule],
+  imports: [JobsSearchHttpModule],
 })
 export class AppModule {}

@@ -31,4 +31,8 @@ export class ElasticsearchService {
   async search(request: estypes.SearchRequest) {
     return this.client.search(request);
   }
+
+  getClient(): Client {
+    return this.client;
+  }
 }

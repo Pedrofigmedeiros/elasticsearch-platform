@@ -1,18 +1,17 @@
 import { INestApplicationContext, Logger } from '@nestjs/common';
-import { ElasticsearchService } from 'libs/elasticsearch';
-import { indexRegistry } from './registry';
+import { ElasticsearchService, aliases, Alias } from 'libs/elastic';
 
 const logger = new Logger('CreateIndex');
 
 export async function createIndex(
   app: INestApplicationContext,
-  alias: string,
+  alias: Alias,
 ): Promise<string | null> {
 
   const elasticsearchService = app.get(ElasticsearchService);
   const client = elasticsearchService.getClient();
 
-  const definition = indexRegistry[alias];
+  const definition = aliases[alias];
   if (!definition) {
     throw new Error(`Index '${alias}' not found in registry`);
   }
@@ -24,13 +23,14 @@ export async function createIndex(
     format: "json",
   });
   if (indicesWithAlias.length > 0) {
-    return;
+    return null;
   }
+
+  const indexMapping = definition.build();
 
   await client.indices.create({
     index: indexName,
-    mappings: definition.mapping.mappings,
-    settings: definition.settings,
+    ...indexMapping,
   });
 
   await client.indices.putAlias({

@@ -28,31 +28,13 @@
         "tsConfigPath": "libs/config/tsconfig.lib.json"
       }
     },
-    "elasticsearch": {
+    "elastic": {
       "type": "library",
-      "root": "libs/elasticsearch",
+      "root": "libs/elastic",
       "entryFile": "index",
-      "sourceRoot": "libs/elasticsearch/src",
+      "sourceRoot": "libs/elastic/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/elasticsearch/tsconfig.lib.json"
-      }
-    },
-    "elasticsearch-platform": {
-      "type": "application",
-      "root": "apps/elasticsearch-platform",
-      "entryFile": "main",
-      "sourceRoot": "apps/elasticsearch-platform/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/elasticsearch-platform/tsconfig.app.json"
-      }
-    },
-    "indexer": {
-      "type": "application",
-      "root": "apps/indexer",
-      "entryFile": "main",
-      "sourceRoot": "apps/indexer/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/indexer/tsconfig.app.json"
+        "tsConfigPath": "libs/elastic/tsconfig.lib.json"
       }
     },
     "operations": {
@@ -64,31 +46,13 @@
         "tsConfigPath": "apps/operations/tsconfig.app.json"
       }
     },
-    "product-search": {
+    "jobs-search": {
       "type": "library",
-      "root": "libs/product-search",
+      "root": "libs/jobs-search",
       "entryFile": "index",
-      "sourceRoot": "libs/product-search/src",
+      "sourceRoot": "libs/jobs-search/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/product-search/tsconfig.lib.json"
-      }
-    },
-    "search-index": {
-      "type": "library",
-      "root": "libs/search-index",
-      "entryFile": "index",
-      "sourceRoot": "libs/search-index/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/search-index/tsconfig.lib.json"
-      }
-    },
-    "shared": {
-      "type": "library",
-      "root": "libs/shared",
-      "entryFile": "index",
-      "sourceRoot": "libs/shared/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/shared/tsconfig.lib.json"
+        "tsConfigPath": "libs/jobs-search/tsconfig.lib.json"
       }
     }
   }

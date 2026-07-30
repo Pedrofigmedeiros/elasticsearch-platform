@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ElasticsearchService } from 'libs/elasticsearch';
-import { JobPosting } from './types/product.type';
+import { ElasticsearchService } from 'libs/elastic';
+import { JobPosting } from './types/job-posting.type';
 
 @Injectable()
-export class ProductSearchService {
+export class JobsSearchService {
   private readonly indexName = 'job_postings';
 
   constructor(
@@ -30,7 +30,7 @@ export class ProductSearchService {
     return response.hits.hits.map((hit) => ({
       id: hit._id,
       score: hit._score,
-      Product: hit._source as JobPosting,
+      job: hit._source as JobPosting,
     }));
   }
 }

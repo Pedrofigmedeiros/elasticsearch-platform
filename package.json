@@ -75,11 +75,9 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@app/search-index(|/.*)$": "<rootDir>/libs/search-index/src/$1",
       "^libs/config(|/.*)$": "<rootDir>/libs/config/src/$1",
-      "^libs/elasticsearch(|/.*)$": "<rootDir>/libs/elasticsearch/src/$1",
-      "^libs/product-search(|/.*)$": "<rootDir>/libs/product-search/src/$1",
-      "^libs/shared(|/.*)$": "<rootDir>/libs/shared/src/$1"
+      "^libs/elastic(|/.*)$": "<rootDir>/libs/elastic/src/$1",
+      "^libs/jobs-search(|/.*)$": "<rootDir>/libs/jobs-search/src/$1"
     }
   }
 }

@@ -1,7 +1,14 @@
-import { IndexMapping } from './index-mapping.type';
+import { IndexMapping } from './types';
 
-export const jobPostingsMapping = (): IndexMapping => {
+export const buildJobsIndex = (): IndexMapping => {
   return {
+    settings: {
+      index: {
+        number_of_shards: 1,
+        number_of_replicas: 0,
+        refresh_interval: "30s",
+      },
+    },
     mappings: {
       dynamic: "false",
       properties: {
@@ -72,5 +79,5 @@ export const jobPostingsMapping = (): IndexMapping => {
         },
       },
     }
-  }
+  };
 };

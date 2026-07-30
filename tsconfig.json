@@ -22,35 +22,23 @@
     "strictBindCallApply": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@app/search-index": [
-        "libs/search-index/src"
-      ],
-      "@app/search-index/*": [
-        "libs/search-index/src/*"
-      ],
       "libs/config": [
         "libs/config/src"
       ],
       "libs/config/*": [
         "libs/config/src/*"
       ],
-      "libs/elasticsearch": [
-        "libs/elasticsearch/src"
+      "libs/elastic": [
+        "libs/elastic/src"
       ],
-      "libs/elasticsearch/*": [
-        "libs/elasticsearch/src/*"
+      "libs/elastic/*": [
+        "libs/elastic/src/*"
       ],
-      "libs/product-search": [
+      "libs/jobs-search": [
         "libs/jobs-search/src"
       ],
-      "libs/product-search/*": [
+      "libs/jobs-search/*": [
         "libs/jobs-search/src/*"
-      ],
-      "libs/shared": [
-        "libs/shared/src"
-      ],
-      "libs/shared/*": [
-        "libs/shared/src/*"
       ]
     }
   }

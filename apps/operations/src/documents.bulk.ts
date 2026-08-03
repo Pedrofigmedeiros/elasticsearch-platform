@@ -4,7 +4,7 @@ import { inspect } from 'node:util';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { parse } from 'csv-parse';
-import { Alias} from 'libs/elastic';
+import { Alias, ElasticsearchService } from 'libs/elastic';
 
 import { AppModule } from './app.module';
 import { bulkIndex } from './documents/bulk-index';
@@ -23,6 +23,8 @@ async function main() {
   }
 
   const app = await NestFactory.createApplicationContext(AppModule);
+  const esService = app.get(ElasticsearchService);
+  const client = esService.getClient();
 
   let batch: Record<string, unknown>[] = [];
   let totalIndexed = 0;
@@ -40,7 +42,7 @@ async function main() {
     totalRead += 1;
 
     if (batch.length >= BATCH_SIZE) {
-      const { indexed, errors } = await bulkIndex(app, alias, batch);
+      const { indexed, errors } = await bulkIndex(client, alias, batch);
       totalIndexed += indexed;
       totalErrors += errors;
       logger.log(
@@ -52,7 +54,7 @@ async function main() {
 
   // Processa o último batch (pode ter menos que BATCH_SIZE)
   if (batch.length > 0) {
-    const { indexed, errors } = await bulkIndex(app, alias, batch);
+    const { indexed, errors } = await bulkIndex(client, alias, batch);
     totalIndexed += indexed;
     totalErrors += errors;
   }

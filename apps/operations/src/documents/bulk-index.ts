@@ -1,16 +1,12 @@
-import { ElasticsearchService, Alias } from 'libs/elastic';
-import { INestApplicationContext, Logger } from '@nestjs/common';
+import { Client } from '@elastic/elasticsearch';
+import { Alias } from 'libs/elastic';
 
 export async function bulkIndex(
-  app: INestApplicationContext,
+  client: Client,
   alias: Alias,
   documents: Record<string, unknown>[],
   idField: string = 'job_link',
 ): Promise<{ indexed: number; errors: number }> {
-
-  const elasticsearchService = app.get(ElasticsearchService);
-  const client = elasticsearchService.getClient();
-
   if (documents.length === 0) {
     return { indexed: 0, errors: 0 };
   }

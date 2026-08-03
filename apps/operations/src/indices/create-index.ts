@@ -1,15 +1,13 @@
-import { INestApplicationContext, Logger } from '@nestjs/common';
-import { ElasticsearchService, aliases, Alias } from 'libs/elastic';
+import { Logger } from '@nestjs/common';
+import { Client } from '@elastic/elasticsearch';
+import { aliases, Alias } from 'libs/elastic';
 
 const logger = new Logger('CreateIndex');
 
 export async function createIndex(
-  app: INestApplicationContext,
+  client: Client,
   alias: Alias,
 ): Promise<string | null> {
-
-  const elasticsearchService = app.get(ElasticsearchService);
-  const client = elasticsearchService.getClient();
 
   const definition = aliases[alias];
   if (!definition) {

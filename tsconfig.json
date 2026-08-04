@@ -22,6 +22,12 @@
     "strictBindCallApply": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
+      "@app/typescript": [
+        "libs/typescript/src"
+      ],
+      "@app/typescript/*": [
+        "libs/typescript/src/*"
+      ],
       "libs/config": [
         "libs/config/src"
       ],

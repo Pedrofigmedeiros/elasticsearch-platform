@@ -1,5 +1,6 @@
 import { Client, estypes } from '@elastic/elasticsearch';
 import { Injectable, Logger } from '@nestjs/common';
+import { bufferAsyncIterator } from 'libs/typescript'
 
 export type Document = {
   job_link: string;
@@ -46,7 +47,7 @@ export class Writer {
     let countFailed = 0;
     let countTotal = 0;
 
-    const buffer = this.bufferAsyncIterator(iterator, bulkSize);
+    const buffer = bufferAsyncIterator(iterator, bulkSize);
 
     for await (const docs of buffer) {
 
@@ -96,7 +97,6 @@ export class Writer {
         `Wrote ${successes.length} docs (${countTotal} so far) for slice ${sliceId}, ${failures.length} failed, in ${bulkEnd - bulkStart}ms`,
       );
 
-      // Log de erros (se houver)
       if (failures.length > 0) {
         this.logger.error(
           `Got ${failures.length} failures writing to Elasticsearch`,
@@ -119,25 +119,5 @@ export class Writer {
       total: countSuccess + countFailed,
       elapsedTimeMs: endTime - startTime,
     };
-  }
-
-  private async *bufferAsyncIterator<T>(
-    iterator: AsyncGenerator<T>,
-    bufferSize: number,
-  ): AsyncGenerator<T[]> {
-    let buffer: T[] = [];
-
-    for await (const item of iterator) {
-      buffer.push(item);
-
-      if (buffer.length >= bufferSize) {
-        yield buffer;
-        buffer = [];
-      }
-    }
-
-    if (buffer.length > 0) {
-      yield buffer;
-    }
   }
 }

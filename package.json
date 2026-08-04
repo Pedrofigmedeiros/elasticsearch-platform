@@ -78,6 +78,7 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
+      "^@app/typescript(|/.*)$": "<rootDir>/libs/typescript/src/$1",
       "^libs/config(|/.*)$": "<rootDir>/libs/config/src/$1",
       "^libs/elastic(|/.*)$": "<rootDir>/libs/elastic/src/$1",
       "^libs/jobs-search(|/.*)$": "<rootDir>/libs/jobs-search/src/$1"

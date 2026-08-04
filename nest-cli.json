@@ -37,6 +37,15 @@
         "tsConfigPath": "libs/elastic/tsconfig.lib.json"
       }
     },
+    "jobs-search": {
+      "type": "library",
+      "root": "libs/jobs-search",
+      "entryFile": "index",
+      "sourceRoot": "libs/jobs-search/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/jobs-search/tsconfig.lib.json"
+      }
+    },
     "operations": {
       "type": "application",
       "root": "apps/operations",
@@ -46,13 +55,13 @@
         "tsConfigPath": "apps/operations/tsconfig.app.json"
       }
     },
-    "jobs-search": {
+    "typescript": {
       "type": "library",
-      "root": "libs/jobs-search",
+      "root": "libs/typescript",
       "entryFile": "index",
-      "sourceRoot": "libs/jobs-search/src",
+      "sourceRoot": "libs/typescript/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/jobs-search/tsconfig.lib.json"
+        "tsConfigPath": "libs/typescript/tsconfig.lib.json"
       }
     }
   }

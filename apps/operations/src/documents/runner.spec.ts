@@ -21,12 +21,12 @@ test("delegates to processor with the alias as indexName", async () => {
 
   const stats = await runner.run({
     csvPath: '/tmp/jobs.csv',
-    alias: Alias.jobs,
+    alias: Alias.jobPostings,
   });
 
   expect(processor.process).toHaveBeenCalledWith({
     csvPath: '/tmp/jobs.csv',
-    indexName: Alias.jobs,
+    indexName: Alias.jobPostings,
     bulkSize: undefined,
   });
   expect(stats).toMatchObject({ successful: 5, failed: 0, total: 5 });
@@ -42,13 +42,13 @@ test("passes bulkSize through", async () => {
 
   await runner.run({
     csvPath: '/tmp/jobs.csv',
-    alias: Alias.jobs,
+    alias: Alias.jobPostings,
     bulkSize: 500,
   });
 
   expect(processor.process).toHaveBeenCalledWith({
     csvPath: '/tmp/jobs.csv',
-    indexName: Alias.jobs,
+    indexName: Alias.jobPostings,
     bulkSize: 500,
   });
 });

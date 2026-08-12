@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JobsSearchController } from './jobs-search.controller';
-import { JobsSearchModule as JobsSearchLibraryModule } from 'libs/jobs-search/src';
+import { JobsSearchModule as JobsSearchLibraryModule } from 'libs/jobs-search';
 
 @Module({
   imports: [JobsSearchLibraryModule],

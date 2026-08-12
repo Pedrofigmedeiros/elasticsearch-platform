@@ -11,7 +11,7 @@ const logger = new Logger('DocumentsBulk');
 
 async function main() {
   const csvPath = process.argv[2];
-  const alias = (process.argv[3] as Alias) ?? Alias.jobs;
+  const alias = (process.argv[3] as Alias) ?? Alias.jobPostings;
 
   if (!csvPath) {
     logger.error('Usage: npm run op:documents:bulk -- <path-to-csv> [alias]');
@@ -31,4 +31,3 @@ main().catch((e: unknown) => {
   console.log(inspect(e, false, null));
   process.exit(1);
 });
-

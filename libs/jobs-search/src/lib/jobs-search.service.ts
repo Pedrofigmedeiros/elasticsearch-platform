@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ElasticsearchService } from 'libs/elastic';
+import { Alias, ElasticsearchService } from 'libs/elastic';
 import { JobPosting } from './types/job-posting.type';
 
 @Injectable()
 export class JobsSearchService {
-  private readonly indexName = 'job_postings';
+  private readonly indexName = Alias.jobPostings;
 
   constructor(
     private readonly elasticsearchService: ElasticsearchService,

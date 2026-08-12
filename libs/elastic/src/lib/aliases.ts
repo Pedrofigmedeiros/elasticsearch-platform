@@ -1,8 +1,8 @@
-import { buildJobsIndex } from './build-jobs-index';
+import { buildJobsPostingsIndex as buildJobPostingsIndex } from './build-jobs-index';
 import { IndexDefinition, IndexMapping } from './types';
 
 export enum Alias {
-  jobs = 'jobs',
+  jobPostings = 'job_postings',
   // Futuro:
   // jobSummary = 'job_summary',
   // jobSkills = 'job_skills',
@@ -11,9 +11,9 @@ export enum Alias {
 export const allAliases = Object.values(Alias);
 
 export const aliases: Record<Alias, IndexDefinition> = {
-  [Alias.jobs]: {
-    alias: Alias.jobs,
-    build: (): IndexMapping => buildJobsIndex(),
+  [Alias.jobPostings]: {
+    alias: Alias.jobPostings,
+    build: (): IndexMapping => buildJobPostingsIndex(),
   },
 
   // Futuro com múltiplos índices:

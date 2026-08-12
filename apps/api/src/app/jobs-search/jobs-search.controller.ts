@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { JobsSearchService } from 'libs/jobs-search/src';
+import { JobsSearchService } from 'libs/jobs-search';
 
 @Controller('jobs')
 export class JobsSearchController {

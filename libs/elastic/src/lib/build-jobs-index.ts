@@ -1,6 +1,6 @@
 import { IndexMapping } from './types';
 
-export const buildJobsIndex = (): IndexMapping => {
+export const buildJobsPostingsIndex = (): IndexMapping => {
   return {
     settings: {
       index: {

@@ -13,7 +13,7 @@ async function main() {
   const esService = app.get(ElasticsearchService);
   const client = esService.getClient();
 
-  const alias = Alias.jobs;
+  const alias = Alias.jobPostings;
   const indexName = await createIndex(client, alias);
 
   if (indexName) {

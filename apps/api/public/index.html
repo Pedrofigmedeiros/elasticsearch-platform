@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Elasticsearch job search workbench" />
+    <title>Elastic Jobs · Search Lab</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <a class="brand" href="/" aria-label="Elastic Jobs home">
+          <span class="brand-mark" aria-hidden="true"><i></i></span>
+          <span>Elastic Jobs</span>
+        </a>
+        <nav class="primary-nav" aria-label="Primary navigation">
+          <a class="active" href="#search">Search jobs</a>
+          <a href="#insights">Search insights</a>
+          <a href="#index">Index explorer</a>
+        </nav>
+        <div class="header-actions">
+          <div class="environment"><span></span><div><strong>Index connected</strong><small>Alias: job_postings</small></div></div>
+          <button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle color theme">◐</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="intro">
+          <div>
+            <p class="eyebrow">Search workbench</p>
+            <h1>Explore job postings</h1>
+            <p>Test full-text queries and inspect Elasticsearch ranking signals.</p>
+          </div>
+        </section>
+
+        <section class="search-panel" id="search">
+          <form class="search-form" id="search-form">
+            <label class="query-field">
+              <span class="search-icon" aria-hidden="true"></span>
+              <input id="query" name="q" type="search" value="software engineer" placeholder="Search jobs, skills, or companies" autocomplete="off" />
+              <kbd>⌘ K</kbd>
+            </label>
+            <button class="search-button" type="submit">Search</button>
+          </form>
+          <div class="query-options">
+            <span>Quick searches</span>
+            <button type="button" data-query="software engineer">Software engineer</button>
+            <button type="button" data-query="data scientist">Data scientist</button>
+            <button type="button" data-query="product manager">Product manager</button>
+            <button type="button" data-query="designer">Designer</button>
+            <button type="button" data-query="remote">Remote</button>
+          </div>
+        </section>
+
+        <div class="content-grid">
+          <aside class="filters" aria-label="Search filters">
+            <div class="filter-heading"><strong>Filters</strong><button id="reset-filters" type="button">Reset all</button></div>
+            <fieldset aria-labelledby="work-setup-title">
+              <div class="filter-title" id="work-setup-title"><span class="filter-icon">▦</span><strong>Work setup</strong><span>⌄</span></div>
+              <label><input type="checkbox" name="setup" value="remote" /> Remote <span id="remote-count">0</span></label>
+              <label><input type="checkbox" name="setup" value="hybrid" /> Hybrid <span id="hybrid-count">0</span></label>
+              <label><input type="checkbox" name="setup" value="onsite" /> On-site <span id="onsite-count">0</span></label>
+            </fieldset>
+            <fieldset aria-labelledby="job-type-title">
+              <div class="filter-title" id="job-type-title"><span class="filter-icon">▱</span><strong>Job type</strong><span>⌄</span></div>
+              <div id="job-type-filters" class="dynamic-filters"><p>Search to load options.</p></div>
+            </fieldset>
+            <fieldset aria-labelledby="seniority-title">
+              <div class="filter-title" id="seniority-title"><span class="filter-icon">♙</span><strong>Seniority</strong><span>⌄</span></div>
+              <div id="level-filters" class="dynamic-filters"><p>Search to load options.</p></div>
+            </fieldset>
+          </aside>
+
+          <div class="results-column">
+            <section class="results-toolbar" aria-live="polite">
+              <div class="results-overview">
+                <strong id="result-count">Ready to search</strong>
+                <span id="result-summary">Results from the jobs alias</span>
+                <div class="active-filters" id="active-filters"></div>
+                <button class="clear-filters" id="clear-filters" type="button" hidden>Clear all</button>
+              </div>
+              <div class="toolbar-actions">
+                <label>Sort by <select id="sort"><option value="score">Relevance</option><option value="company">Company</option><option value="title">Job title</option></select></label>
+              </div>
+            </section>
+            <section class="result-list" id="results" aria-label="Search results">
+              <div class="empty-state">
+                <span class="empty-icon" aria-hidden="true">⌕</span>
+                <h2>Run your first search</h2>
+                <p>Results will appear here with their score and indexed fields.</p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <footer class="status-bar">
+        <span><i class="online"></i> API connected</span>
+        <span>Multi-match: <b>job_title³</b> · search_position² · company · location</span>
+        <span>10 results max</span>
+      </footer>
+    </div>
+    <template id="result-template">
+      <article class="result-card">
+        <div class="result-body">
+          <div class="job-avatar" aria-hidden="true"></div>
+          <div class="job-content">
+            <div class="result-title"><span class="rank"></span><div><h2></h2><p></p></div></div>
+            <div class="job-tags"></div>
+            <div class="job-meta"></div>
+          </div>
+          <div class="result-actions">
+            <div class="elastic-score" title="Raw Elasticsearch relevance score"><small>_score</small><strong></strong></div>
+            <button class="expand-button" type="button" aria-expanded="false">Inspect fields <span>›</span></button>
+          </div>
+        </div>
+        <div class="indexed-fields" hidden><div class="details-heading"><strong>Indexed fields</strong><a class="job-link" target="_blank" rel="noreferrer">Open job posting <span>↗</span></a></div></div>
+      </article>
+    </template>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

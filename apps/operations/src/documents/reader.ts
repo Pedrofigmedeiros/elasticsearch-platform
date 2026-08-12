@@ -2,7 +2,6 @@ import { createReadStream } from 'node:fs';
 import { Injectable, Logger } from '@nestjs/common';
 import { parse } from 'csv-parse';
 
-
 export type Row = {
   job_link: string;
   last_processed_time: string;
@@ -24,18 +23,16 @@ export type Row = {
 export class Reader {
   private readonly logger = new Logger(Reader.name);
 
-  constructor() {}
-
   async *read(csvPath: string): AsyncGenerator<Row> {
     this.logger.log(`Starting to read CSV: ${csvPath}`);
 
-    const parser = createReadStream(csvPath).pipe(
-      parse({
-        columns: true,
-        skip_empty_lines: true,
-        trim: true,
-      }),
+    const source = createReadStream(csvPath);
+    const parser = source.pipe(
+      parse({ columns: true, skip_empty_lines: true, trim: true }),
     );
+
+    // .pipe() does not forward source errors, so we do it manually.
+    source.on('error', (error) => parser.destroy(error));
 
     let count = 0;
 
@@ -47,3 +44,4 @@ export class Reader {
     this.logger.log(`Finished reading CSV: ${count} rows`);
   }
 }
+

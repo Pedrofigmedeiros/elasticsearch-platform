@@ -72,9 +72,41 @@ npm run start:prod api
 
 ## Running the Indexer
 
+The `operations` app provides CLI scripts to manage indices and bulk-index documents from a CSV file into Elasticsearch.
+
+### Create an index (and its alias)
+
 ```bash
-npm run start indexer
+npm run op:indices:create
 ```
+
+### Bulk index documents from a CSV
+
+```bash
+npm run op:documents:bulk -- <path-to-csv> [alias]
+```
+
+Example:
+
+```bash
+npm run op:documents:bulk -- ./data/job_postings.csv jobs
+```
+
+The bulk indexing pipeline reads the CSV in streaming mode, transforms each row, and writes documents to Elasticsearch in batches:
+
+```text
+Reader → Transformer → Writer
+  │          │            │
+  │          │            └─ batches documents and calls the Elasticsearch bulk API (retry + timeout)
+  │          └─ normalizes raw CSV values (dates → ISO 8601, "t"/"f" → boolean)
+  └─ streams the CSV file row by row (AsyncGenerator, no full-file buffering)
+```
+
+- **Reader** (`documents/reader.ts`) — streams a CSV file and yields one row at a time.
+- **Transformer** (`documents/transformer.ts`) — converts a raw row into a Document ready for indexing.
+- **Writer** (`documents/writer.ts`) — batches documents and bulk-writes them to Elasticsearch, tracking successes/failures.
+- **Processor** (`documents/processor.ts`) — wires Reader → Transformer → Writer together.
+- **Runner** (`documents/runner.ts`) — CLI entry point: validates the target alias and runs the Processor.
 
 ---
 
@@ -97,25 +129,19 @@ npm run test:cov
 
 ```text
 apps/
-├── api/
-└── indexer/
+├── api/                     # Search API (NestJS app)
+└── operations/              # CLI scripts: index management & bulk indexing
+    └── src/
+        ├── documents/       # Reader, Transformer, Writer, Processor, Runner
+        └── indices/         # Index creation/mapping
 
 libs/
-├── config/
-├── elasticsearch/
-├── product-search/
-├── observability/
-└── shared/
+├── config/                  # Environment configuration (ConfigService)
+├── elastic/                 # Elasticsearch client, aliases, index mappings
+├── jobs-search/             # Jobs search domain logic
+└── typescript/              # Shared TS utilities (async iterators helpers)
 
-elasticsearch/
-├── analyzers/
-├── mappings/
-├── index-templates/
-└── queries/
-
-data/
-docker/
-docs/
+data/                        # Sample CSV datasets for bulk indexing
 ```
 
 ---
@@ -137,14 +163,14 @@ docs/
 
 ### Indexing
 
-- [ ] Database Integration
-- [ ] Bulk Indexing
+- [x] CSV Data Source Integration
+- [x] Bulk Indexing (Reader → Transformer → Writer pipeline)
+- [x] Document Transformation
 - [ ] Incremental Synchronization
-- [ ] Document Transformation
 
 ### Platform
 
-- [ ] Index Management
+- [x] Index Management
 - [ ] Document Management
 - [ ] Health Checks
 - [ ] Metrics

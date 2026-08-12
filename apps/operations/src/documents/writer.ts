@@ -1,6 +1,6 @@
 import { Client, estypes } from '@elastic/elasticsearch';
 import { Injectable, Logger } from '@nestjs/common';
-import { bufferAsyncIterator } from 'libs/typescript'
+import { bufferAsyncIterator } from '@app/typescript';
 
 export type Document = {
   job_link: string;
@@ -50,7 +50,6 @@ export class Writer {
     const buffer = bufferAsyncIterator(iterator, bulkSize);
 
     for await (const docs of buffer) {
-
       const bulkStart = Date.now();
       const response = await this.elastic.bulk(
         {

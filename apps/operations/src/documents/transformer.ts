@@ -1,77 +1,54 @@
 import { Injectable } from "@nestjs/common";
-import { Config } from "libs/config"
+
+import { Row } from "./reader";
+import { Document } from "./writer";
+
+type Transform = (raw: Row) => Partial<Document>;
 
 @Injectable()
 export class Transformer {
-  private readonly transformationsSync;
-  private readonly transformationsAsync;
+  private readonly transformations: Transform[] = [transformDate, transformBool];
 
-  constructor(
-    private readonly config: Config
-  ) {
-    this.transformationsSync = [
-      transformDate,
-      transformBool,
-    ];
-    this.transformationsAsync = [
-      // Add future async transformations here
-    ];
-  }
+  async transform(raw: Row): Promise<Document> {
+    const doc = { ...raw } as unknown as Document;
 
-  async transform(raw: Record<string, unknown>): Promise<Record<string, unknown>> {
-    const doc: Record<string, unknown> = {
-      ...raw,
-    }
-
-    for (const fn of this.transformationsSync) {
+    for (const fn of this.transformations) {
       Object.assign(doc, fn(raw));
-    }
-    const asyncResults = await Promise.all(
-      this.transformationsAsync.map(async (fn) => fn(raw)),
-    );
-    for (const result of asyncResults) {
-      Object.assign(doc, result);
     }
 
     return doc;
   }
 }
 
-export const transformDate = (raw: Record<string, unknown>): Record<string, unknown> => {
+export const transformDate = (raw: Row): Partial<Document> => {
   const result: Record<string, unknown> = {};
-  const dateFields = ['last_processed_time', 'first_seen'];
+  const dateFields: (keyof Row)[] = ['last_processed_time', 'first_seen'];
 
-  dateFields.forEach(field => {
+  for (const field of dateFields) {
     const value = raw[field];
-    if (value && typeof value === 'string') {
-      const transformed = value
+    if (typeof value === 'string') {
+      result[field] = value
         .replace(' ', 'T')
         .replace('+00', 'Z')
-        .replace(/\.\d{6}/, '');
-
-      result[field] = transformed;
+        .replace(/\.\d+/, ''); // remove fractional seconds (variable length in source data)
     }
-  });
+  }
 
-  return result
-}
+  return result as Partial<Document>;
+};
 
-export const transformBool = (raw: Record<string, unknown>): Record<string, unknown> => {
+export const transformBool = (raw: Row): Partial<Document> => {
   const result: Record<string, unknown> = {};
-  const boolFields = ['got_summary', 'got_ner', 'is_being_worked'];
+  const boolFields: (keyof Row)[] = ['got_summary', 'got_ner', 'is_being_worked'];
 
-  boolFields.forEach(field => {
+  for (const field of boolFields) {
     const value = raw[field];
-    if (value && typeof value === 'string') {
+    if (typeof value === 'string') {
       const lower = value.toLowerCase();
-
-      if (lower === 't') {
-        result[field] = true;
-      } else if (lower === 'f') {
-        result[field] = false;
-      }
+      if (lower === 't') result[field] = true;
+      if (lower === 'f') result[field] = false;
     }
-  });
+  }
 
-  return result
-}
+  return result as Partial<Document>;
+};

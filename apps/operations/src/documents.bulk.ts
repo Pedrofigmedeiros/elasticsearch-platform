@@ -1,17 +1,13 @@
-import { createReadStream } from 'node:fs';
 import { inspect } from 'node:util';
 
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { parse } from 'csv-parse';
-import { Alias, ElasticsearchService } from 'libs/elastic';
+import { Alias } from 'libs/elastic';
 
 import { AppModule } from './app.module';
-import { bulkIndex } from './documents/bulk-index';
+import { Runner } from './documents/runner';
 
 const logger = new Logger('DocumentsBulk');
-
-const BATCH_SIZE = 1000;
 
 async function main() {
   const csvPath = process.argv[2];
@@ -23,45 +19,9 @@ async function main() {
   }
 
   const app = await NestFactory.createApplicationContext(AppModule);
-  const esService = app.get(ElasticsearchService);
-  const client = esService.getClient();
+  const runner = app.get(Runner);
 
-  let batch: Record<string, unknown>[] = [];
-  let totalIndexed = 0;
-  let totalErrors = 0;
-  let totalRead = 0;
-
-  const parser = createReadStream(csvPath).pipe(
-    parse({ columns: true, skip_empty_lines: true, trim: true }),
-  );
-
-  logger.log(`Starting bulk indexing from '${csvPath}' into alias '${alias}'`);
-
-  for await (const row of parser) {
-    batch.push(row);
-    totalRead += 1;
-
-    if (batch.length >= BATCH_SIZE) {
-      const { indexed, errors } = await bulkIndex(client, alias, batch);
-      totalIndexed += indexed;
-      totalErrors += errors;
-      logger.log(
-        `Progress: ${totalRead} read | ${totalIndexed} indexed | ${totalErrors} errors`,
-      );
-      batch = [];
-    }
-  }
-
-  // Processa o último batch (pode ter menos que BATCH_SIZE)
-  if (batch.length > 0) {
-    const { indexed, errors } = await bulkIndex(client, alias, batch);
-    totalIndexed += indexed;
-    totalErrors += errors;
-  }
-
-  logger.log(
-    `Done. Total read: ${totalRead} | Indexed: ${totalIndexed} | Errors: ${totalErrors}`,
-  );
+  await runner.run({ csvPath, alias });
 
   await app.close();
 }
@@ -71,3 +31,4 @@ main().catch((e: unknown) => {
   console.log(inspect(e, false, null));
   process.exit(1);
 });
+

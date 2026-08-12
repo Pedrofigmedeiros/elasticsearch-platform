@@ -13,7 +13,8 @@ const elements = {
   summary: document.querySelector('#result-summary'),
   sort: document.querySelector('#sort'),
   clearFilters: document.querySelector('#clear-filters'),
-  activeFilterCount: document.querySelector('#active-filter-count'),
+  resetFilters: document.querySelector('#reset-filters'),
+  activeFilters: document.querySelector('#active-filters'),
   jobTypeFilters: document.querySelector('#job-type-filters'),
   levelFilters: document.querySelector('#level-filters'),
   themeToggle: document.querySelector('#theme-toggle'),
@@ -36,6 +37,13 @@ const inferSetup = (job) => {
   if (haystack.includes('remote')) return 'remote';
   if (haystack.includes('hybrid')) return 'hybrid';
   return 'onsite';
+};
+
+const displayFilterValue = (value) => {
+  const normalized = text(value, '').toLowerCase().replace(/[\s_-]/g, '');
+  if (normalized === 'onsite') return 'On-site';
+  if (normalized === 'midsenior') return 'Mid senior';
+  return text(value).replace(/\b\w/g, (letter) => letter.toUpperCase());
 };
 
 const displayDate = (value) => {
@@ -77,7 +85,9 @@ const renderResult = (result, index) => {
   fragment.querySelector('.rank').textContent = `#${index + 1}`;
   fragment.querySelector('.result-title h2').textContent = text(job.job_title, 'Untitled job');
   fragment.querySelector('.result-title p').textContent = `${text(job.company)} · ${text(job.job_location)}`;
-  fragment.querySelector('.score strong').textContent = typeof result.score === 'number' ? result.score.toFixed(3) : '—';
+  fragment.querySelector('.elastic-score strong').textContent = typeof result.score === 'number'
+    ? result.score.toFixed(3)
+    : '—';
   fragment.querySelector('.job-avatar').textContent = initials(job.company);
 
   const meta = fragment.querySelector('.job-meta');
@@ -87,7 +97,11 @@ const renderResult = (result, index) => {
   createMeta(meta, 'First seen', displayDate(job.first_seen));
 
   const tags = fragment.querySelector('.job-tags');
-  [job.job_type, job.job_level, inferSetup(job)].filter(Boolean).forEach((value) => appendText(tags, 'span', value));
+  const tagValues = [inferSetup(job), job.job_level, job.job_type]
+    .filter(Boolean)
+    .map(displayFilterValue)
+    .filter((value, index, values) => values.findIndex((item) => item.toLowerCase() === value.toLowerCase()) === index);
+  tagValues.forEach((value) => appendText(tags, 'span', value));
 
   const link = fragment.querySelector('.job-link');
   if (job.job_link) link.href = job.job_link;
@@ -95,6 +109,8 @@ const renderResult = (result, index) => {
   const indexedFields = fragment.querySelector('.indexed-fields');
   const fieldGrid = document.createElement('div');
   fieldGrid.className = 'field-grid';
+  fieldGrid.append(createField('_id', result.id));
+  fieldGrid.append(createField('_score', result.score));
   Object.entries(job).forEach(([key, value]) => fieldGrid.append(createField(key, value)));
   indexedFields.append(fieldGrid);
 
@@ -102,7 +118,8 @@ const renderResult = (result, index) => {
   expand.addEventListener('click', () => {
     const isOpen = expand.getAttribute('aria-expanded') === 'true';
     expand.setAttribute('aria-expanded', String(!isOpen));
-    expand.textContent = isOpen ? '+' : '−';
+    expand.replaceChildren(document.createTextNode(isOpen ? 'Inspect fields ' : 'Hide fields '));
+    appendText(expand, 'span', isOpen ? '›' : '⌃');
     indexedFields.hidden = isOpen;
   });
 
@@ -118,11 +135,16 @@ const filteredResults = () => {
   const filters = currentFilters();
   let results = [...state.results];
 
-  filters.forEach((filter) => {
+  const filterGroups = filters.reduce((groups, filter) => {
+    groups[filter.name] = [...(groups[filter.name] || []), filter.value];
+    return groups;
+  }, {});
+
+  Object.entries(filterGroups).forEach(([name, values]) => {
     results = results.filter(({ job = {} }) => {
-      if (filter.name === 'setup') return inferSetup(job) === filter.value;
-      if (filter.name === 'job_type') return text(job.job_type, '') === filter.value;
-      if (filter.name === 'job_level') return text(job.job_level, '') === filter.value;
+      if (name === 'setup') return values.includes(inferSetup(job));
+      if (name === 'job_type') return values.includes(text(job.job_type, ''));
+      if (name === 'job_level') return values.includes(text(job.job_level, ''));
       return true;
     });
   });
@@ -133,13 +155,35 @@ const filteredResults = () => {
   return results;
 };
 
+const renderActiveFilters = () => {
+  const filters = currentFilters();
+  elements.activeFilters.replaceChildren();
+  filters.forEach((filter) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'active-filter';
+    chip.setAttribute('aria-label', `Remove ${displayFilterValue(filter.value)} filter`);
+    chip.append(document.createTextNode(displayFilterValue(filter.value)));
+    appendText(chip, 'span', '×');
+    chip.addEventListener('click', () => {
+      const input = [...document.querySelectorAll('.filters input')]
+        .find((candidate) => candidate.name === filter.name && candidate.value === filter.value);
+      if (input) input.checked = false;
+      render();
+    });
+    elements.activeFilters.append(chip);
+  });
+  elements.clearFilters.hidden = filters.length === 0;
+  elements.resetFilters.disabled = filters.length === 0;
+};
+
 const render = () => {
   const results = filteredResults();
   elements.results.replaceChildren();
   results.forEach((result, index) => elements.results.append(renderResult(result, index)));
-  elements.activeFilterCount.textContent = `${currentFilters().length} active`;
+  renderActiveFilters();
   elements.count.textContent = `${results.length} ${results.length === 1 ? 'result' : 'results'}`;
-  elements.summary.textContent = state.query ? `for “${state.query}”` : 'Results from the jobs alias';
+  elements.summary.textContent = state.query && !currentFilters().length ? `for “${state.query}”` : '';
 
   if (!results.length) {
     const empty = document.createElement('div');
@@ -173,7 +217,7 @@ const renderFilterGroup = (container, name, values) => {
     input.name = name;
     input.value = value;
     input.addEventListener('change', render);
-    label.append(input, document.createTextNode(value));
+    label.append(input, document.createTextNode(displayFilterValue(value)));
     appendText(label, 'span', count);
     container.append(label);
   });
@@ -244,10 +288,12 @@ document.querySelectorAll('[data-query]').forEach((button) => {
 
 document.querySelectorAll('input[name="setup"]').forEach((input) => input.addEventListener('change', render));
 elements.sort.addEventListener('change', render);
-elements.clearFilters.addEventListener('click', () => {
+const clearAllFilters = () => {
   document.querySelectorAll('.filters input').forEach((input) => { input.checked = false; });
   render();
-});
+};
+elements.clearFilters.addEventListener('click', clearAllFilters);
+elements.resetFilters.addEventListener('click', clearAllFilters);
 elements.themeToggle.addEventListener('click', () => {
   const isDark = document.documentElement.dataset.theme === 'dark';
   document.documentElement.dataset.theme = isDark ? 'light' : 'dark';
@@ -261,3 +307,4 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.documentElement.dataset.theme = localStorage.getItem('elastic-jobs-theme') || 'light';
+search(elements.query.value);
